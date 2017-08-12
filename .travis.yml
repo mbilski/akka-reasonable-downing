@@ -5,3 +5,7 @@ scala:
 
 jdk:
   - oraclejdk8
+
+script: 
+  - sbt test
+  - sbt multi-jvm:test 
