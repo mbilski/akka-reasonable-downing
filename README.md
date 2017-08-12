@@ -1,6 +1,35 @@
-# akka-resonable-downing #
+# akka-reasonable-downing #
 
-Welcome to akka-resonable-downing!
+[![Build Status](https://travis-ci.org/mbilski/akka-reasonable-downing.svg?branch=master)](https://travis-ci.org/mbilski/akka-reasonable-downing)
+
+akka-reasonable-downing provides split brain resolver for akka cluster using static quorum strategy.
+
+## Setup ##
+
+Add to your `build.sbt`
+
+```
+libraryDependencies = "pl.immutables" %% "akka-reasonable-downing" % "VERSION"
+```
+
+## Configuration ##
+
+```
+akka {
+  cluster {
+    downing-provider-class = "pl.immutables.akka.reasonable.downing.StaticQuorumDowningProvider"
+    min-nr-of-members = ${akka.reasonable.downing.quorum-size}
+  }
+
+  reasonable.downing {
+    # the time to make the decision after the cluster is stable
+    stable-after = 7 seconds
+
+    # the N / 2 + 1 where N is number of nodes in a static cluster
+    quorum-size = 3
+  }
+}
+```
 
 ## Contribution policy ##
 
