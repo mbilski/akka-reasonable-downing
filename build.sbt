@@ -4,7 +4,7 @@ import com.typesafe.sbt.SbtMultiJvm.MultiJvmKeys.MultiJvm
 HeaderPlugin.autoImport.headerSettings(MultiJvm)
 AutomateHeaderPlugin.autoImport.automateHeaderSettings(MultiJvm)
 
-lazy val `akka-resonable-downing` =
+lazy val `akka-reasonable-downing` =
   project
     .in(file("."))
     .settings(multiJvmSettings: _*)

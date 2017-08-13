@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package pl.immutables.akka.resonable.downing
+package pl.immutables.akka.reasonable.downing
 
 import akka.actor.Address
 import akka.cluster.Cluster
@@ -45,9 +45,9 @@ object StaticQuorumDowningSpecConfig extends MultiNodeConfig {
       | akka.log-dead-letters = off
       | akka.actor.provider = "akka.cluster.ClusterActorRefProvider"
       | akka.cluster.auto-join = off
-      | akka.resonable.downing.stable-after = 5 seconds
-      | akka.resonable.downing.quorum-size = 2
-      | akka.cluster.downing-provider-class = "pl.immutables.akka.resonable.downing.StaticQuorumDowningProvider"
+      | akka.reasonable.downing.stable-after = 5 seconds
+      | akka.reasonable.downing.quorum-size = 2
+      | akka.cluster.downing-provider-class = "pl.immutables.akka.reasonable.downing.StaticQuorumDowningProvider"
       | akka.cluster.run-coordinated-shutdown-when-down = off
       | akka.coordinated-shutdown.run-by-jvm-shutdown-hook = off
       | akka.coordinated-shutdown.terminate-actor-system = off

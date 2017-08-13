@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package pl.immutables.akka.resonable.downing
+package pl.immutables.akka.reasonable.downing
 
 import akka.actor.{ Actor, ActorLogging, ActorSystem, Cancellable, Props }
 import akka.cluster.ClusterEvent._
@@ -49,8 +49,8 @@ case class StaticQuorumDowningSettings(quorum: Int, stableAfter: FiniteDuration)
 
 object StaticQuorumDowningSettings {
   def apply(conf: Config): StaticQuorumDowningSettings = StaticQuorumDowningSettings(
-    conf.getInt("akka.resonable.downing.quorum-size"),
-    FiniteDuration(conf.getDuration("akka.resonable.downing.stable-after").toMillis,
+    conf.getInt("akka.reasonable.downing.quorum-size"),
+    FiniteDuration(conf.getDuration("akka.reasonable.downing.stable-after").toMillis,
                    TimeUnit.MILLISECONDS)
   )
 }
