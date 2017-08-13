@@ -9,7 +9,9 @@ akka-reasonable-downing provides split brain resolver for akka cluster using sta
 Add to your `build.sbt`
 
 ```
-libraryDependencies = "pl.immutables" %% "akka-reasonable-downing" % "0.0.3"
+resolvers += Resolver.jcenterRepo
+
+libraryDependencies = "pl.immutables" %% "akka-reasonable-downing" % "0.0.4"
 ```
 
 ## Configuration ##
