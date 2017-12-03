@@ -11,7 +11,7 @@ Add to your `build.sbt`
 ```
 resolvers += Resolver.jcenterRepo
 
-libraryDependencies = "pl.immutables" %% "akka-reasonable-downing" % "0.0.4"
+libraryDependencies += "pl.immutables" %% "akka-reasonable-downing" % "0.0.4"
 ```
 
 ## Configuration ##
