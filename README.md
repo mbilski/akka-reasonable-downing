@@ -33,6 +33,10 @@ akka {
 }
 ```
 
+## Demo ##
+
+See the demo [here](https://www.youtube.com/watch?v=_uz8QOjVrNQ).
+
 ## Contribution policy ##
 
 Contributions via GitHub pull requests are gladly accepted from their original author. Along with
