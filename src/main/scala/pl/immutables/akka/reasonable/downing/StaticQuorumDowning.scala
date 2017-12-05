@@ -55,9 +55,9 @@ object StaticQuorumDowningSettings {
   )
 }
 
-class StaticQuorumDowning(cluster: Cluster,
-                          settings: StaticQuorumDowningSettings)(implicit ex: ExecutionContext)
-    extends Actor
+class StaticQuorumDowning(cluster: Cluster, settings: StaticQuorumDowningSettings)(
+    implicit ex: ExecutionContext
+) extends Actor
     with ActorLogging {
 
   import StaticQuorumDowning._
@@ -88,18 +88,31 @@ class StaticQuorumDowning(cluster: Cluster,
 
   def checkQuorum(): Unit =
     if (unreachable.size >= settings.quorum) {
-      log.warning("Downing reachable nodes because of {} unreachable nodes [{}]",
+      log.warning("Downing reachable nodes because of {} unreachable nodes [state={}]",
                   settings.quorum,
                   cluster.state)
       reachable.map(_.address).foreach(cluster.down)
     } else if (reachable.size < settings.quorum) {
-      log.warning("Downing reachable nodes because of too small cluster {} [{}]",
-                  reachable,
-                  cluster.state)
+      log.warning("Downing reachable nodes because of too small cluster [state={}]", cluster.state)
       reachable.map(_.address).foreach(cluster.down)
-    } else if (cluster.state.unreachable.nonEmpty && isLeader) {
-      log.warning("Downing unreachable nodes {} [{}]", unreachable, cluster.state)
-      unreachable.map(_.address).foreach(cluster.down)
+    } else if (cluster.state.unreachable.nonEmpty) {
+      if (isLeader) {
+        log.warning("Downing unreachable nodes [state={}]", cluster.state)
+        unreachable.map(_.address).foreach(cluster.down)
+      } else if (isLeaderUp) {
+        log.debug(
+          "There are unreachable nodes but this node is not a leader. Doing nothing. [state={}]",
+          cluster.state
+        )
+      } else {
+        log.warning(
+          "There are unreachable nodes and there is no leader. Downing unreachable nodes. [state={}]",
+          cluster.state
+        )
+        unreachable.map(_.address).foreach(cluster.down)
+      }
+    } else {
+      log.debug("Cluster is in a valid state [state={}]", cluster.state)
     }
 
   def startingCluster: Receive = {
@@ -128,8 +141,9 @@ class StaticQuorumDowning(cluster: Cluster,
   def weaklyUp    = nodesOf(MemberStatus.weaklyUp)
   def unreachable = cluster.state.unreachable
   def reachable   = cluster.state.members.diff(unreachable).diff(weaklyUp)
+  def isLeader    = cluster.state.leader.contains(cluster.selfUniqueAddress.address)
+  def isLeaderUp  = reachable.map(_.address).intersect(cluster.state.leader.toSet).nonEmpty
 
-  def isLeader                      = cluster.state.leader.contains(cluster.selfUniqueAddress.address)
   def nodesOf(status: MemberStatus) = cluster.state.members.filter(_.status == status)
 
   override def receive: Receive = startingCluster

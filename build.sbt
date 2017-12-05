@@ -22,8 +22,8 @@ lazy val `akka-reasonable-downing` =
 lazy val library =
   new {
     object Version {
-      val akka      = "2.5.4"
-      val scalaTest = "3.0.3"
+      val akka      = "2.5.7"
+      val scalaTest = "3.0.4"
     }
     val akkaCluster   = "com.typesafe.akka" %% "akka-cluster"            % Version.akka
     val akkaMultiNode = "com.typesafe.akka" %% "akka-multi-node-testkit" % Version.akka
@@ -41,8 +41,8 @@ lazy val commonSettings =
     organizationName := "Mateusz Bilski",
     startYear := Some(2017),
     licenses += ("Apache-2.0", url("http://www.apache.org/licenses/LICENSE-2.0")),
-    scalaVersion := "2.12.3",
-    crossScalaVersions := Seq("2.11.11", "2.12.3"),
+    scalaVersion := "2.12.4",
+    crossScalaVersions := Seq("2.11.11", "2.12.4"),
     releaseCrossBuild := true,
     scalacOptions ++= Seq(
       "-unchecked",
@@ -65,5 +65,5 @@ lazy val scalafmtSettings =
   Seq(
     scalafmtOnCompile := true,
     scalafmtOnCompile.in(Sbt) := false,
-    scalafmtVersion := "1.1.0"
+    scalafmtVersion := "1.3.0"
   )
