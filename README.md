@@ -2,7 +2,7 @@
 
 [![Build Status](https://travis-ci.org/mbilski/akka-reasonable-downing.svg?branch=master)](https://travis-ci.org/mbilski/akka-reasonable-downing)
 
-akka-reasonable-downing provides split brain resolver for akka cluster using static quorum strategy.
+akka-reasonable-downing provides split brain resolver for akka static cluster using quorum strategy.
 
 ## Setup ##
 
