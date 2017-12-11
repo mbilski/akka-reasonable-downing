@@ -2,6 +2,7 @@
 
 [![Build Status](https://travis-ci.org/mbilski/akka-reasonable-downing.svg?branch=master)](https://travis-ci.org/mbilski/akka-reasonable-downing)
 [![codecov](https://codecov.io/gh/mbilski/akka-reasonable-downing/branch/master/graph/badge.svg)](https://codecov.io/gh/mbilski/akka-reasonable-downing)
+[![Maven Central](https://maven-badges.herokuapp.com/maven-central/pl.immutables/akka-reasonable-downing/badge.svg)](https://maven-badges.herokuapp.com/maven-central/pl.immutables/akka-reasonable-downing)
 
 akka-reasonable-downing provides split brain resolver for akka static cluster using quorum strategy.
 
@@ -10,9 +11,7 @@ akka-reasonable-downing provides split brain resolver for akka static cluster us
 Add to your `build.sbt`
 
 ```
-resolvers += Resolver.jcenterRepo
-
-libraryDependencies += "pl.immutables" %% "akka-reasonable-downing" % "0.0.4"
+libraryDependencies += "pl.immutables" %% "akka-reasonable-downing" % "1.0.0"
 ```
 
 ## Configuration ##
