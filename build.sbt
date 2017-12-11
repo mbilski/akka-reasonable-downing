@@ -41,9 +41,19 @@ lazy val commonSettings =
     organizationName := "Mateusz Bilski",
     startYear := Some(2017),
     licenses += ("Apache-2.0", url("http://www.apache.org/licenses/LICENSE-2.0")),
+    homepage := Some(url("http://github.com/mbilski/akka-reasonable-downing")),
+    developers := List(
+    Developer("mbilski", "Mateusz Bilski", "mateusz.bilski@gmail.com", url("http://immutables.pl"))),
+    scmInfo := Some(
+      ScmInfo(
+        url("https://github.com/mbilski/akka-reasonable-downing"),
+        "scm:git:git@github.com:mbilski/akka-reasonable-downing.git"
+      )
+    ),
     scalaVersion := "2.12.4",
     crossScalaVersions := Seq("2.11.11", "2.12.4"),
     releaseCrossBuild := true,
+    releasePublishArtifactsAction := PgpKeys.publishSigned.value,
     scalacOptions ++= Seq(
       "-unchecked",
       "-deprecation",
