@@ -6,6 +6,8 @@ scala:
 jdk:
   - oraclejdk8
 
-script: 
-  - sbt test
-  - sbt multi-jvm:test 
+script:
+  - sbt clean coverage test multi-jvm:test coverageReport
+
+after_success:
+  - bash <(curl -s https://codecov.io/bash)
