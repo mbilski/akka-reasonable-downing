@@ -2,9 +2,9 @@
 
 [![Build Status](https://travis-ci.org/mbilski/akka-reasonable-downing.svg?branch=master)](https://travis-ci.org/mbilski/akka-reasonable-downing)
 [![codecov](https://codecov.io/gh/mbilski/akka-reasonable-downing/branch/master/graph/badge.svg)](https://codecov.io/gh/mbilski/akka-reasonable-downing)
-[![Maven Central](https://maven-badges.herokuapp.com/maven-central/pl.immutables/akka-reasonable-downing/badge.svg)](https://maven-badges.herokuapp.com/maven-central/pl.immutables/akka-reasonable-downing)
+[![Maven Central](https://maven-badges.herokuapp.com/maven-central/pl.immutables/akka-reasonable-downing_2.12/badge.svg)](https://maven-badges.herokuapp.com/maven-central/pl.immutables/akka-reasonable-downing_2.12)
 
-akka-reasonable-downing provides split brain resolver for akka static cluster using quorum strategy.
+akka-reasonable-downing provides split brain resolver for static akka cluster using quorum strategy.
 
 ## Setup ##
 
@@ -24,7 +24,7 @@ akka {
   }
 
   reasonable.downing {
-    # the time to make the decision after the cluster is stable
+    # the time to make a decision after the cluster is stable
     stable-after = 7 seconds
 
     # the N / 2 + 1 where N is number of nodes in a static cluster
