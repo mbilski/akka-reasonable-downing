@@ -29,6 +29,9 @@ akka {
 
     # the N / 2 + 1 where N is number of nodes in a static cluster
     quorum-size = 3
+    
+    # list of the roles which be used in quorum. may be empty or absent.
+    quorum-roles = ["seed"]
   }
 }
 ```
