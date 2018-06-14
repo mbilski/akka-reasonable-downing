@@ -11,7 +11,7 @@ akka-reasonable-downing provides split brain resolver for static akka cluster us
 Add to your `build.sbt`
 
 ```
-libraryDependencies += "pl.immutables" %% "akka-reasonable-downing" % "1.0.0"
+libraryDependencies += "pl.immutables" %% "akka-reasonable-downing" % "1.1.0"
 ```
 
 ## Configuration ##
@@ -29,7 +29,7 @@ akka {
 
     # the N / 2 + 1 where N is number of nodes in a static cluster
     quorum-size = 3
-    
+
     # list of the roles which be used in quorum. may be empty or absent.
     quorum-roles = ["seed"]
   }
