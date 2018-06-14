@@ -18,12 +18,13 @@ package pl.immutables.akka.reasonable.downing
 
 import akka.actor.{ Actor, ActorLogging, ActorSystem, Cancellable, Props }
 import akka.cluster.ClusterEvent._
-import akka.cluster.{ Cluster, DowningProvider, MemberStatus }
+import akka.cluster.{ Cluster, DowningProvider, Member, MemberStatus }
 
 import scala.concurrent.ExecutionContext
 import scala.concurrent.duration.FiniteDuration
 import java.util.concurrent.TimeUnit
 
+import scala.collection.JavaConverters._
 import com.typesafe.config.Config
 
 class StaticQuorumDowningProvider(system: ActorSystem) extends DowningProvider {
@@ -45,13 +46,17 @@ object StaticQuorumDowning {
   ) = Props(new StaticQuorumDowning(cluster, settings))
 }
 
-case class StaticQuorumDowningSettings(quorum: Int, stableAfter: FiniteDuration)
+case class StaticQuorumDowningSettings(quorum: Int, stableAfter: FiniteDuration, roles: Seq[String])
 
 object StaticQuorumDowningSettings {
   def apply(conf: Config): StaticQuorumDowningSettings = StaticQuorumDowningSettings(
-    conf.getInt("akka.reasonable.downing.quorum-size"),
-    FiniteDuration(conf.getDuration("akka.reasonable.downing.stable-after").toMillis,
-                   TimeUnit.MILLISECONDS)
+    quorum = conf.getInt("akka.reasonable.downing.quorum-size"),
+    stableAfter = FiniteDuration(conf.getDuration("akka.reasonable.downing.stable-after").toMillis,
+                                 TimeUnit.MILLISECONDS),
+    roles =
+      if (conf.hasPath("akka.reasonable.downing.quorum-roles"))
+        conf.getStringList("akka.reasonable.downing.quorum-roles").asScala
+      else Nil
   )
 }
 
@@ -64,6 +69,8 @@ class StaticQuorumDowning(cluster: Cluster, settings: StaticQuorumDowningSetting
   log.info("Starting StaticQuorumDowning [{}]", settings)
 
   var check: Option[Cancellable] = None
+
+  val quorumRoles = settings.roles.toSet
 
   override def preStart(): Unit =
     cluster.subscribe(self,
@@ -78,8 +85,10 @@ class StaticQuorumDowning(cluster: Cluster, settings: StaticQuorumDowningSetting
     check = Some(context.system.scheduler.scheduleOnce(settings.stableAfter, self, QuorumCheck))
   }
 
+  def suitable(m: Member) = quorumRoles.isEmpty || quorumRoles.intersect(m.roles).nonEmpty
+
   def checkIfClusterStarted(): Unit =
-    if (nodesOf(MemberStatus.Up).size >= settings.quorum) {
+    if (nodesOf(MemberStatus.Up).count(suitable) >= settings.quorum) {
       log.debug("Cluster reached minimal number of members.")
       context.become(startedCluster)
     } else {
@@ -87,12 +96,15 @@ class StaticQuorumDowning(cluster: Cluster, settings: StaticQuorumDowningSetting
     }
 
   def checkQuorum(): Unit =
-    if (unreachable.size >= settings.quorum) {
-      log.warning("Downing reachable nodes because of {} unreachable nodes [state={}]",
-                  settings.quorum,
-                  cluster.state)
+    if (unreachable.count(suitable) >= settings.quorum) {
+      log.warning(
+        "Downing reachable nodes because of {} unreachable nodes with roles [{}] [state={}]",
+        settings.quorum,
+        quorumRoles.mkString(", "),
+        cluster.state
+      )
       reachable.map(_.address).foreach(cluster.down)
-    } else if (reachable.size < settings.quorum) {
+    } else if (reachable.count(suitable) < settings.quorum) {
       log.warning("Downing reachable nodes because of too small cluster [state={}]", cluster.state)
       reachable.map(_.address).foreach(cluster.down)
     } else if (cluster.state.unreachable.nonEmpty) {
