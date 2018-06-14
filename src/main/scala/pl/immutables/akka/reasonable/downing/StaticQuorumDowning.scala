@@ -40,6 +40,7 @@ class StaticQuorumDowningProvider(system: ActorSystem) extends DowningProvider {
 
 object StaticQuorumDowning {
   case object QuorumCheck
+  case object MemberCheck
 
   def props(cluster: Cluster, settings: StaticQuorumDowningSettings)(
       implicit ex: ExecutionContext
@@ -68,7 +69,13 @@ class StaticQuorumDowning(cluster: Cluster, settings: StaticQuorumDowningSetting
   import StaticQuorumDowning._
   log.info("Starting StaticQuorumDowning [{}]", settings)
 
-  var check: Option[Cancellable] = None
+  var quorumCheck: Option[Cancellable] = None
+
+  var memberCheck: Option[Cancellable] =
+    Some(
+      context.system.scheduler
+        .schedule(settings.stableAfter, settings.stableAfter, self, MemberCheck)
+    )
 
   val quorumRoles = settings.roles.toSet
 
@@ -81,8 +88,10 @@ class StaticQuorumDowning(cluster: Cluster, settings: StaticQuorumDowningSetting
   override def postStop(): Unit = cluster.unsubscribe(self)
 
   def scheduleQuorumCheck(): Unit = {
-    check.foreach(_.cancel())
-    check = Some(context.system.scheduler.scheduleOnce(settings.stableAfter, self, QuorumCheck))
+    quorumCheck.foreach(_.cancel())
+    quorumCheck = Some(
+      context.system.scheduler.scheduleOnce(settings.stableAfter, self, QuorumCheck)
+    )
   }
 
   def suitable(m: Member) = quorumRoles.isEmpty || quorumRoles.intersect(m.roles).nonEmpty
@@ -90,6 +99,8 @@ class StaticQuorumDowning(cluster: Cluster, settings: StaticQuorumDowningSetting
   def checkIfClusterStarted(): Unit =
     if (nodesOf(MemberStatus.Up).count(suitable) >= settings.quorum) {
       log.debug("Cluster reached minimal number of members.")
+      memberCheck.map(_.cancel())
+      memberCheck = None
       context.become(startedCluster)
     } else {
       log.debug("Waiting for cluster to reach minimal number of members.")
@@ -129,6 +140,9 @@ class StaticQuorumDowning(cluster: Cluster, settings: StaticQuorumDowningSetting
 
   def startingCluster: Receive = {
     case MemberUp(_) =>
+      checkIfClusterStarted()
+
+    case MemberCheck =>
       checkIfClusterStarted()
 
     case _ => // ignore
