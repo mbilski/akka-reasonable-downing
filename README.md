@@ -11,7 +11,7 @@ akka-reasonable-downing provides split brain resolver for static akka cluster us
 Add to your `build.sbt`
 
 ```
-libraryDependencies += "pl.immutables" %% "akka-reasonable-downing" % "1.0.0"
+libraryDependencies += "pl.immutables" %% "akka-reasonable-downing" % "1.1.0"
 ```
 
 ## Configuration ##
