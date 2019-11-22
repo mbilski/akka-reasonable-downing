@@ -24,7 +24,7 @@ import scala.concurrent.ExecutionContext
 import scala.concurrent.duration.FiniteDuration
 import java.util.concurrent.TimeUnit
 
-import scala.collection.JavaConverters._
+import scala.jdk.CollectionConverters._
 import com.typesafe.config.Config
 
 class StaticQuorumDowningProvider(system: ActorSystem) extends DowningProvider {
@@ -56,7 +56,7 @@ object StaticQuorumDowningSettings {
                                  TimeUnit.MILLISECONDS),
     roles =
       if (conf.hasPath("akka.reasonable.downing.quorum-roles"))
-        conf.getStringList("akka.reasonable.downing.quorum-roles").asScala
+        conf.getStringList("akka.reasonable.downing.quorum-roles").asScala.toList
       else Nil
   )
 }
@@ -74,7 +74,7 @@ class StaticQuorumDowning(cluster: Cluster, settings: StaticQuorumDowningSetting
   var memberCheck: Option[Cancellable] =
     Some(
       context.system.scheduler
-        .schedule(settings.stableAfter, settings.stableAfter, self, MemberCheck)
+        .scheduleWithFixedDelay(settings.stableAfter, settings.stableAfter, self, MemberCheck)
     )
 
   val quorumRoles = settings.roles.toSet
