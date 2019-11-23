@@ -51,7 +51,7 @@ lazy val commonSettings =
       )
     ),
     scalaVersion := "2.13.1",
-    crossScalaVersions := Seq("2.12.6", "2.13.1"),
+    crossScalaVersions := Seq("2.13.1"),
     releaseCrossBuild := true,
     releasePublishArtifactsAction := PgpKeys.publishSigned.value,
     scalacOptions ++= Seq(
