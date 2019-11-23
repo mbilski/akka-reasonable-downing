@@ -22,8 +22,8 @@ lazy val `akka-reasonable-downing` =
 lazy val library =
   new {
     object Version {
-      val akka      = "2.5.13"
-      val scalaTest = "3.0.5"
+      val akka      = "2.6.0"
+      val scalaTest = "3.0.8"
     }
     val akkaCluster   = "com.typesafe.akka" %% "akka-cluster"            % Version.akka
     val akkaMultiNode = "com.typesafe.akka" %% "akka-multi-node-testkit" % Version.akka
@@ -32,8 +32,7 @@ lazy val library =
 
 lazy val settings =
   commonSettings ++
-  gitSettings ++
-  scalafmtSettings
+  gitSettings
 
 lazy val commonSettings =
   Seq(
@@ -50,8 +49,8 @@ lazy val commonSettings =
         "scm:git:git@github.com:mbilski/akka-reasonable-downing.git"
       )
     ),
-    scalaVersion := "2.12.6",
-    crossScalaVersions := Seq("2.11.12", "2.12.6"),
+    scalaVersion := "2.13.1",
+    crossScalaVersions := Seq("2.11.12", "2.12.6", "2.13.1"),
     releaseCrossBuild := true,
     releasePublishArtifactsAction := PgpKeys.publishSigned.value,
     scalacOptions ++= Seq(
@@ -69,11 +68,4 @@ lazy val commonSettings =
 lazy val gitSettings =
   Seq(
     git.useGitDescribe := true
-  )
-
-lazy val scalafmtSettings =
-  Seq(
-    scalafmtOnCompile := true,
-    scalafmtOnCompile.in(Sbt) := false,
-    scalafmtVersion := "1.3.0"
   )
