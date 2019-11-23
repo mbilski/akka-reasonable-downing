@@ -12,7 +12,8 @@ lazy val `akka-reasonable-downing` =
     .settings(settings)
     .settings(
       libraryDependencies ++= Seq(
-        library.akkaCluster,
+        library.akkaCluster % Provided,
+        library.akkaCluster % Test,
         library.akkaMultiNode % Test,
         library.scalaTest     % Test
       )
