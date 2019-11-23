@@ -109,15 +109,15 @@ class StaticQuorumDowning(cluster: Cluster, settings: StaticQuorumDowningSetting
   def checkQuorum(): Unit =
     if (unreachable.count(suitable) >= settings.quorum) {
       log.warning(
-        "Downing reachable nodes because of {} unreachable nodes with roles [{}] [state={}]",
+        "Downing myself because of {} unreachable nodes with roles [{}] [state={}]",
         settings.quorum,
         quorumRoles.mkString(", "),
         cluster.state
       )
-      reachable.map(_.address).foreach(cluster.down)
+      cluster.down(cluster.selfUniqueAddress.address)
     } else if (reachable.count(suitable) < settings.quorum) {
-      log.warning("Downing reachable nodes because of too small cluster [state={}]", cluster.state)
-      reachable.map(_.address).foreach(cluster.down)
+      log.warning("Downing myself because of too small cluster [state={}]", cluster.state)
+      cluster.down(cluster.selfUniqueAddress.address)
     } else if (cluster.state.unreachable.nonEmpty) {
       if (isLeader) {
         log.warning("Downing unreachable nodes [state={}]", cluster.state)
@@ -129,10 +129,10 @@ class StaticQuorumDowning(cluster: Cluster, settings: StaticQuorumDowningSetting
         )
       } else {
         log.warning(
-          "There are unreachable nodes and there is no leader. Downing unreachable nodes. [state={}]",
+          "There are unreachable nodes and there is no leader. Downing myself. [state={}]",
           cluster.state
         )
-        unreachable.map(_.address).foreach(cluster.down)
+        cluster.down(cluster.selfUniqueAddress.address)
       }
     } else {
       log.debug("Cluster is in a valid state [state={}]", cluster.state)
