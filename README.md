@@ -1,6 +1,6 @@
 # akka-reasonable-downing #
 
-[![Maven Central](https://maven-badges.herokuapp.com/maven-central/pl.immutables/akka-reasonable-downing_2.12/badge.svg)](https://maven-badges.herokuapp.com/maven-central/pl.immutables/akka-reasonable-downing_2.12)
+[![Maven Central](https://maven-badges.herokuapp.com/maven-central/pl.immutables/akka-reasonable-downing_2.13/badge.svg)](https://maven-badges.herokuapp.com/maven-central/pl.immutables/akka-reasonable-downing_2.13)
 
 akka-reasonable-downing provides split brain resolver for static akka cluster using quorum strategy.
 
